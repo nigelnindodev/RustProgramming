@@ -35,4 +35,27 @@ fn main() {
      * Full type annotation for an array contains it's type and number of elements as shown below:
      */
     let _b: [i32; 5] = [1, 2, 3, 4, 5];
+
+    another_function();
+
+    print_labeled_measurement(5, 'h');
+
+    let added_value = plus_one(1);
+    println!("The added value is {added_value}");
+}
+
+// Rust uses snake_case as convention for naming funtions
+fn another_function() {
+    println!("Another function");
+}
+
+// In Rust, you must always declare the type of each parameter
+// Also note that char type are specified in single quotes
+fn print_labeled_measurement(value: i32, unit_label: char) {
+    println!("The measurement is: {value}{unit_label}")
+}
+
+// Functions can also specify their return values with the -> syntax
+fn plus_one(number: i32) -> i32 {
+    return number + 1;
 }
