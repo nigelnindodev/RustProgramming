@@ -56,6 +56,16 @@ fn main() {
     multiple_variables();
 
     clone_data();
+
+    let _s1 = gives_ownership();
+
+    let s2 = String::from("Hello");
+
+    let _s3 = takes_and_gives_back(s2);
+
+    let (passed_string, len) = calculate_length(String::from("hello"));
+
+    println!("The length of '{}' is {}", passed_string, len);
 }
 
 fn string_literal() {
@@ -101,14 +111,14 @@ fn string_literal() {
 
 fn multiple_variables() {
     let x = 5;
-    let y = x;
+    let _y = x;
 
     // From the above, we now have two variables, both equal to 5. This is indeed what is
     // happening, because integers are simple values with a known, fixed size, and these two 5
     // values are pushed to the stack.
 
     let s1 = String::from("hello");
-    let s2 = s1;
+    let _s2 = s1;
 
     // This looks very similar to the previous example, so we might assume that the way it works is
     // the same: that is the second line would make a copy of the value in s1 and bind to s2. But
@@ -159,4 +169,46 @@ fn clone_data() {
     //
     // When you see a call to clone, you know that some arbitrary code is being executed and that
     // code may be expensive.
+}
+
+// The reason that we did not have to call clone for integers is that types such as integers have a
+// known size at compile time. These are stored on the stack, so copies of the actual values are
+// quick to make. In other words, there is really no difference between deep and shallow copying
+// for such cases, so calling clone will not do anything from the usual shallow copying, and we can
+// leave it out.
+//
+// Rust has a special annotation called the `Copy` trait that we can place on types that are stored
+// in the stack. If a type implements the `Copy` trait, variables that use it do not move, but
+// rather are trivially copied, making them still valid after assignment to another variable.
+//
+// Rust will not let us annotate a type with `Copy` if the type has in any part implemented the
+// `Drop` trait (drop trait should have some function drop() that we have already talked about). If the type needs something to happen when the value goes out of scope and we add
+// the `Copy` annotation to that type, we will get a compile time error.
+//
+// As a general rule, any group of simple scalar values can implement `Copy`, and nothing that
+// requires allocation or some form of resource can implement `Copy`.
+
+// gives_ownership function will move it's return value to into the function that calls it
+fn gives_ownership() -> String {
+    let some_string = String::from("yours");
+    // In Rust, you can remove the last semi-colon to return the value
+    some_string
+}
+
+// Function below takes ownership and immediately gives it back
+fn takes_and_gives_back(a_string: String) -> String {
+    a_string
+}
+
+// While the above two functions work, taking and returning ownership with every function is a bit
+// tedious. What if we wanted to let a function use a value and not take ownership? It's also not
+// convenient that anything we pass needs to be passed back in order to be used again, in addition
+// to any data that results from the body of the function that we might want to return as well.
+//
+// As an example of the above, Rust does let use return return multiple values from a function
+// using a tuple as shown below.
+
+fn calculate_length(s: String) -> (String, usize) {
+    let length = s.len();
+    (s, length)
 }
