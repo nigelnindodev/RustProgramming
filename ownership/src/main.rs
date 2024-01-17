@@ -212,3 +212,6 @@ fn calculate_length(s: String) -> (String, usize) {
     let length = s.len();
     (s, length)
 }
+
+// In the next chapter, we'll explore a Rust feature for using a value without transfer of
+// ownership, called `References`
