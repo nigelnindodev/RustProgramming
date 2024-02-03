@@ -207,6 +207,9 @@ fn takes_and_gives_back(a_string: String) -> String {
 //
 // As an example of the above, Rust does let use return return multiple values from a function
 // using a tuple as shown below.
+//
+// Why do we have to return both the size of the string and the string itself so that it can be
+// used downstream? Doesn't make much sense.
 
 fn calculate_length(s: String) -> (String, usize) {
     let length = s.len();
